@@ -1,0 +1,17 @@
+document.getElementById("recipe-form").addEventListener("submit", async function(event) {
+    event.preventDefault();  // Prevent default form submission
+
+    const ingredientsInput = document.getElementById("ingredients").value;
+    const ingredients = ingredientsInput.split(",").map(item => item.trim());
+
+    const response = await fetch("/recipes/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ ingredients })
+    });
+
+    const result = await response.json();
+    document.getElementById("result").innerText = JSON.stringify(result, null, 2);
+});

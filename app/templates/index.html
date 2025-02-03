@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Recipes</title>
+</head>
+<body>
+    <h1>Find Recipes</h1>
+        <form action="/recipes/search_advanced" method="get">
+            <label for="ingredients">Ingredients:</label>
+            <input type="text" id="ingredients" name="ingredients" placeholder="e.g. tomato, cheese" required>
+        <button type="submit">Find Recipe</button>
+    </form>
+
+
+    <div id="result"></div>
+
+    <script>
+        document.getElementById("recipe-form").addEventListener("submit", async function(event) {
+            event.preventDefault();  // Prevent default form submission
+
+            const ingredientsInput = document.getElementById("ingredients").value;
+            const ingredients = ingredientsInput.split(",").map(item => item.trim());
+
+            const response = await fetch("/recipes/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    title: "Recipe Example",  // Add a sample title (adjust if needed)
+                    instructions: "Some instructions",  // Sample instructions
+                    user_id: 1,  // Adjust as per your user ID
+                    ingredients: ingredients
+                })
+            });
+
+            const result = await response.json();
+            document.getElementById("result").innerText = JSON.stringify(result, null, 2);
+        });
+    </script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
