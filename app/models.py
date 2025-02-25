@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+from passlib.hash import bcrypt
 
 Base = declarative_base()
 
@@ -27,3 +28,21 @@ class RecipeIngredient(Base):
 
     recipe_id = Column(Integer, ForeignKey("recipes.id"), primary_key=True)
     ingredient_id = Column(Integer, ForeignKey("ingredients.id"), primary_key=True)
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    avatar_path = Column(String, nullable=True)
+
+    def verify_password(self, password: str) -> bool:
+        """Check if the provided password matches the stored hash."""
+        return bcrypt.verify(password, self.hashed_password)
+
+    @classmethod
+    def hash_password(cls, password: str) -> str:
+        """Hash a plaintext password."""
+        return bcrypt.hash(password)
