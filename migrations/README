@@ -1,1 +1,41 @@
-Generic single-database configuration.
+# Recipe Finder API
+
+## Overview
+Recipe Finder is an API that allows users to search for recipes based on available ingredients.
+
+# Recipe Finder API
+
+## Overview
+Recipe Finder is an API that allows users to search for recipes based on available ingredients.
+
+
+Run the app: `uvicorn app.main:app --reload`
+
+## Usage
+You can interact with the API by sending GET requests to the following endpoints:
+- `/recipes/search`: Search for recipes based on ingredients.
+
+## Deployment
+You can deploy the app using Render or AWS. [Include steps here.]
+
+## Technologies
+- FastAPI
+- PostgreSQL
+- SQLAlchemy
+- Pydantic
+- Uvicorn
+6. Run the app: `uvicorn app.main:app --reload`
+
+## Usage
+You can interact with the API by sending GET requests to the following endpoints:
+- `/recipes/search`: Search for recipes based on ingredients.
+
+## Deployment
+You can deploy the app using Render or AWS.
+
+## Technologies
+- FastAPI
+- PostgreSQL
+- SQLAlchemy
+- Pydantic
+- Uvicorn
