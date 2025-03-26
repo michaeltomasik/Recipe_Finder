@@ -24,6 +24,28 @@ def search_recipes(ingredients: str, db: Session = Depends(database.get_db)):
     return recipes
 
 
+@app.post("/add_ingredient_to_recipe")
+def add_ingredient_to_recipe(recipe_id: int, ingredient_name: str, quantity: str, db: Session = Depends(database.get_db)):
+    recipe = db.query(models.Recipe).filter(models.Recipe.id == recipe_id).first()
+    if not recipe:
+        raise HTTPException(status_code=404, detail="Recipe not found")
+
+    ingredient = db.query(models.Ingredient).filter(models.Ingredient.name == ingredient_name).first()
+    if not ingredient:
+        raise HTTPException(status_code=404, detail="Ingredient not found")
+
+    recipe_ingredient = models.RecipeIngredient(
+        recipe_id=recipe.id,
+        ingredient_id=ingredient.id,
+        quantity=quantity
+    )
+
+    db.add(recipe_ingredient)
+    db.commit()
+
+    return {"message": "Ingredient added to recipe successfully"}
+
+
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the Recipe Finder API!"}
