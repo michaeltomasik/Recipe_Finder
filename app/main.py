@@ -1,8 +1,16 @@
+import os
+from dotenv import load_dotenv
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app import models, schemas, database
 from typing import List
+from app.database import get_db
 
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+print(f"DATABASE_URL: {DATABASE_URL}")
 
 app = FastAPI()
 
@@ -44,6 +52,14 @@ def add_ingredient_to_recipe(recipe_id: int, ingredient_name: str, quantity: str
     db.commit()
 
     return {"message": "Ingredient added to recipe successfully"}
+
+
+@app.get("/test_db")
+def test_db(db: Session = Depends(get_db)):
+    ingredients = db.query(models.Ingredient).all()
+    if not ingredients:
+        raise HTTPException(status_code=404, detail="No ingredients found")
+    return ingredients
 
 
 @app.get("/")
