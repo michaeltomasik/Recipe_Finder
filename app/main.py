@@ -64,6 +64,7 @@ def test_db(db: Session = Depends(database.get_db)):
         raise HTTPException(status_code=404, detail="No ingredients found")
     return ingredients
 
+
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the Recipe Finder API!"}
