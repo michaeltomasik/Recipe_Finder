@@ -4,20 +4,23 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app import models, schemas, database
 from typing import List
-from app.database import get_db
+from app import auth
 
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
+engine = database.get_engine()
+models.Base.metadata.create_all(bind=engine)
+
 print(f"DATABASE_URL: {DATABASE_URL}")
 
 app = FastAPI()
+app.include_router(auth.router)
 
 @app.get("/recipes/search", response_model=List[schemas.RecipeBase])
 def search_recipes(ingredients: str, db: Session = Depends(database.get_db)):
     ingredient_names = [name.strip().lower() for name in ingredients.split(",")]
-
     db_ingredients = db.query(models.Ingredient).filter(models.Ingredient.name.in_(ingredient_names)).all()
 
     if not db_ingredients:
@@ -55,12 +58,11 @@ def add_ingredient_to_recipe(recipe_id: int, ingredient_name: str, quantity: str
 
 
 @app.get("/test_db")
-def test_db(db: Session = Depends(get_db)):
+def test_db(db: Session = Depends(database.get_db)):
     ingredients = db.query(models.Ingredient).all()
     if not ingredients:
         raise HTTPException(status_code=404, detail="No ingredients found")
     return ingredients
-
 
 @app.get("/")
 def read_root():
