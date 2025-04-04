@@ -10,7 +10,7 @@ load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-engine = database.get_engine()
+engine = database.engine
 models.Base.metadata.create_all(bind=engine)
 
 print(f"DATABASE_URL: {DATABASE_URL}")
