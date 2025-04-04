@@ -13,5 +13,8 @@ SQLAlchemy==2.0.37
 starlette==0.45.3
 typing_extensions==4.12.2
 uvicorn==0.34.0
-passlib[bcrypt]
+passlib[bcrypt]~=1.7.4
 pyjwt==2.6.0
+bcrypt~=4.2.1
+alembic~=1.14.1
+psycopg2~=2.9.10
