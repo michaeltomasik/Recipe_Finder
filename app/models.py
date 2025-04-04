@@ -1,10 +1,10 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Text
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
 from passlib.hash import bcrypt
+from datetime import datetime
+from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
-
 
 class User(Base):
     __tablename__ = "users"
@@ -15,6 +15,8 @@ class User(Base):
     avatar_path = Column(String, nullable=True)
     allergies = Column(Text, nullable=True)
     dietary_preferences = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     recipes = relationship("Recipe", back_populates="user")
 
@@ -35,6 +37,8 @@ class Recipe(Base):
     title = Column(String, index=True)
     instructions = Column(Text)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     user = relationship("User", back_populates="recipes")
     ingredients = relationship("Ingredient", secondary="recipe_ingredients", back_populates="recipes")
@@ -54,3 +58,4 @@ class RecipeIngredient(Base):
     recipe_id = Column(Integer, ForeignKey("recipes.id"), primary_key=True)
     ingredient_id = Column(Integer, ForeignKey("ingredients.id"), primary_key=True)
     quantity = Column(String, nullable=True)
+    unit = Column(String, nullable=True)
