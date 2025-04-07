@@ -78,7 +78,7 @@ def signup(
         raise HTTPException(status_code=400, detail="Email already registered")
 
     password_hash = hash_password(user.password)
-    db_user = User(email=user.email, password_hash=password_hash)
+    db_user = User(email=user.email, hashed_password=password_hash)
 
     db.add(db_user)
     db.commit()
