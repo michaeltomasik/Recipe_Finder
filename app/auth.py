@@ -71,7 +71,6 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
 @router.post("/signup")
 def signup(
     user: UserCreate,
-    avatar: UploadFile = File(None),
     db: Session = Depends(get_db)
 ):
     existing_user = db.query(User).filter(User.email == user.email).first()
@@ -80,11 +79,6 @@ def signup(
 
     password_hash = hash_password(user.password)
     db_user = User(email=user.email, password_hash=password_hash)
-
-    if avatar:
-        filename = f"{user.email}_avatar.jpg"
-        avatar_path = save_file(avatar, filename)
-        db_user.avatar_path = avatar_path
 
     db.add(db_user)
     db.commit()
